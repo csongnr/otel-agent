@@ -38,17 +38,17 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
-            initialDelaySeconds: 10 
-            periodSeconds: 20 
+            # httpGet:
+            #   path: /healthz
+            #   port: 8080
+            # initialDelaySeconds: 10 
+            # periodSeconds: 20 
           readinessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
-            initialDelaySeconds: 10 
-            periodSeconds: 20 
+            # httpGet:
+            #   path: /healthz
+            #   port: 8080
+            # initialDelaySeconds: 10 
+            # periodSeconds: 20 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

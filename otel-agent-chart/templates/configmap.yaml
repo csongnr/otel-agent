@@ -8,6 +8,14 @@ data:
       prometheus:
         config:
           scrape_configs:
+            - job_name: 'otelcol'
+              scrape-interval: 10s
+              static_configs:
+              - targets: ['0.0.0.0:8888']
+              metric_relabel_configs:
+                - source_labels: [ __name__ ]
+                  regex: '.*grpc_io.*'
+                  action: drop
             - job_name: 'kube-state-metrics'
               static_configs:
                 - targets: ['kube-state-metrics-service:8080']
@@ -21,13 +29,22 @@ data:
       # newrelic:
       #   api_key: {{ .Values.newRelic.apiKey }}
       otlp:
-        endpoint: "https://otlp.nr-data.net:4317"
+        endpoint: "otlp.nr-data.net:4317"
         headers:
           api-key: {{ .Values.newRelic.apiKey }}
+      debug:
+    extensions:
+      zpages:
+        endpoint: 0.0.0.0:55679
     service:
+      telemetry:
+        logs:
+          level: "debug"
+        metrics:
+          address: ":8888"
       pipelines:
         metrics:
           receivers: [prometheus]
           processors: [batch]
-          exporters: [otlp, prometheus]
+          exporters: [otlp, prometheus, debug]
 
