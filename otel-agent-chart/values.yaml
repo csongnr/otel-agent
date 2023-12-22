@@ -11,7 +11,7 @@ image:
   tag: "0.91.0"
 
 newRelic:
-  apiKey: <FILL WITH NEW RELIC API KEY TODO> 
+  apiKey: <APIKEY INSERT HERE> 
 
 imagePullSecrets: []
 nameOverride: ""

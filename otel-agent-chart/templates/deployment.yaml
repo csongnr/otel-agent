@@ -39,12 +39,16 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10 
+            periodSeconds: 20 
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10 
+            periodSeconds: 20 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
@@ -53,7 +57,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: {{ include "otel-agent-chart.fullname" . }}-config
+            name: {{ include "otel-agent-chart.name" . }}-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

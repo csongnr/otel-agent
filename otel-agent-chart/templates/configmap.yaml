@@ -13,6 +13,7 @@ data:
                 - targets: ['kube-state-metrics-service:8080']
 
     processors:
+      batch:
     exporters:
       prometheus:
         endpoint: "0.0.0.0:8888"
@@ -27,6 +28,6 @@ data:
       pipelines:
         metrics:
           receivers: [prometheus]
-          processors: []
+          processors: [batch]
           exporters: [otlp, prometheus]
 
