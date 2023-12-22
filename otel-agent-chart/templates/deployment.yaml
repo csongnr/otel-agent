@@ -53,7 +53,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: {{ include "otel-agent-chart.name " . }}-config
+            name: {{ include "otel-agent-chart.fullname" . }}-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
