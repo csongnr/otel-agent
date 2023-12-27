@@ -4,6 +4,7 @@
 
 replicaCount: 1
 
+mode: daemonset
 image:
   repository: otel/opentelemetry-collector-contrib
   pullPolicy: IfNotPresent
@@ -11,7 +12,7 @@ image:
   tag: "0.91.0"
 
 newRelic:
-  apiKey: <APIKEY INSERT HERE> 
+  apiKey: <nr-license-key>
 
 imagePullSecrets: []
 nameOverride: ""

@@ -1,33 +1,23 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: {{ include "otel-agent-chart.fullname" . }}
   labels:
-    {{- include "otel-agent-chart.labels" . | nindent 4 }}
-spec:
+    app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
+    helm.sh/chart: {{ include "otel-agent-chart.chart" . }}
+spec: 
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "otel-agent-chart.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "otel-agent-chart.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "otel-agent-chart.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      containers:
+      containers: 
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
