@@ -6,9 +6,6 @@ metadata:
     app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
     helm.sh/chart: {{ include "otel-agent-chart.chart" . }}
 spec: 
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
