@@ -5,10 +5,26 @@ metadata:
 data:
   otel-collector-config.yaml: |
     receivers:
-      otlp:
-        protocols:
-          grpc:
-          http:
+      hostmetrics:  
+        collection_interval: 1m
+        initial_delay: 1s
+        scrapers:
+          cpu:
+          disk:
+          load:
+            cpu_average: false
+          memory:
+          network:
+      k8sobjects:
+        auth_type: serviceAccount
+        objects: 
+          - name: pods 
+            mode: pull
+            interval: 30m 
+          - name: events
+            mode: watch
+            group: events.k8s.io
+            namespaces: [default]
       prometheus:
         config:
           scrape_configs:
@@ -16,6 +32,10 @@ data:
               scrape_interval: 10s
               static_configs:
               - targets: ['0.0.0.0:8888']
+            - job_name: 'kube-state-metrics'
+              scrape_interval: 10s
+              static_configs:
+              - targets: ['kube-state-metrics:8080']
 
     processors:
       resource:
@@ -41,16 +61,15 @@ data:
             - from: resource_attribute
               name: k8s.pod.uid
       batch:
+      resourcedetection:
+        detectors: [env, system]
+      cumulativetodelta:
 
     exporters:
       otlp:
         endpoint: "https://otlp.nr-data.net:4318"
         headers:
           api-key: {{ .Values.newRelic.apiKey }}
-
-    extensions:
-      zpages:
-        endpoint: 0.0.0.0:55679
 
     service:
       telemetry:
@@ -60,6 +79,9 @@ data:
           address: ":8888"
       pipelines:
         metrics:
-          receivers: [otlp, prometheus]
-          processors: [resource, k8sattributes, batch]
+          receivers: [hostmetrics, prometheus]
+          processors: [resource, k8sattributes, batch, resourcedetection, cumulativetodelta]
+          exporters: [otlp]
+        logs:
+          receivers: [k8sobjects]
           exporters: [otlp]

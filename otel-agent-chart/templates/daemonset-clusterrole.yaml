@@ -4,7 +4,7 @@ metadata:
   name: otel-collector-cluster-role
 rules: 
   - apiGroups: [""]
-    resources: ["pods", "namespaces"]
+    resources: ["pods", "namespaces", "events"]
     verbs: ["get", "watch", "list"]
   - apiGroups: ["apps"]
     resources: ["replicasets"]
@@ -12,3 +12,6 @@ rules:
   - apiGroups: ["extensions"]
     resources: ["replicasets"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["events.k8s.io"]
+    resources: ["events"]
+    verbs: ["watch", "list"]
