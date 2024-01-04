@@ -4,11 +4,15 @@
 
 replicaCount: 1
 
+mode: daemonset
 image:
-  repository: nginx
+  repository: otel/opentelemetry-collector-contrib
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "0.91.0"
+
+newRelic:
+  apiKey: <nr-license-key>
 
 imagePullSecrets: []
 nameOverride: ""
