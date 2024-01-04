@@ -4,7 +4,6 @@
 
 replicaCount: 1
 
-mode: daemonset
 image:
   repository: otel/opentelemetry-collector-contrib
   pullPolicy: IfNotPresent
