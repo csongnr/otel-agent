@@ -14,6 +14,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
     spec:
+      serviceAccountName: daemonset-serviceaccount
       containers: 
         - name: {{ .Chart.Name }}
           securityContext:
@@ -29,6 +30,23 @@ spec:
             - --config=/conf/otel-collector-config.yaml
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: HOST_IP
+              valueFrom: 
+                fieldRef:
+                  fieldPath: status.hostIP 
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT 
+              value: "http://$(HOST_IP):55680"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom: 
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.instance.id=$(POD_NAME),k8s.pod.uid=$(POD_UID)
           volumeMounts:
             - name: config-volume
               mountPath: /conf
