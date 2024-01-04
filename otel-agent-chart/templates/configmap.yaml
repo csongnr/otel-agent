@@ -75,8 +75,6 @@ data:
       telemetry:
         logs:
           level: "debug"
-        metrics:
-          address: ":8888"
       pipelines:
         metrics:
           receivers: [hostmetrics, prometheus]
