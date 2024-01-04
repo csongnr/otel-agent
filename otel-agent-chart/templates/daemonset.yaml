@@ -24,27 +24,18 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          livenessProbe:
-            # httpGet:
-            #   path: /healthz
-            #   port: 8080
-            # initialDelaySeconds: 10 
-            # periodSeconds: 20 
-          readinessProbe:
-            # httpGet:
-            #   path: /healthz
-            #   port: 8080
-            # initialDelaySeconds: 10 
-            # periodSeconds: 20 
+          command:
+            - /otelcol-contrib
+            - --config=/conf/otel-collector-config.yaml
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config-volume
-              mountPath: /etc/otel-collector
+              mountPath: /conf
       volumes:
         - name: config-volume
           configMap:
-            name: {{ include "otel-agent-chart.name" . }}-config
+            name: otel-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
