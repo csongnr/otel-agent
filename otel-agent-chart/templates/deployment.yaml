@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otelcontribcol
+  labels:
+    app: otelcontribcol
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otelcontribcol
+  template:
+    metadata:
+      labels:
+        app: otelcontribcol
+    spec:
+      serviceAccountName: daemonset-serviceaccount
+      containers:
+        - name: otelcontribcol
+          image: otel/opentelemetry-collector-contrib:latest # specify image
+          args: ["--config", "/etc/config/config.yaml"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/config
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+      volumes:
+        - name: config
+          configMap:
+            name: otel-events-config
