@@ -11,7 +11,11 @@ image:
   tag: "0.91.0"
 
 newRelic:
-  apiKey: <nr-license-key>
+  apiKey: "<NRkey>"
+
+cluster:
+  name: "happyfruit"
+
 
 imagePullSecrets: []
 nameOverride: ""
