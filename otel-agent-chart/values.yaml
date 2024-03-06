@@ -11,10 +11,10 @@ image:
   tag: "0.91.0"
 
 newRelic:
-  apiKey: "<NRkey>"
-
+  apiKey: "<NR-KEY>"
+  endpoint: "https://staging-otlp.nr-data.net:4317"
 cluster:
-  name: "happyfruit"
+  name: "<cluster-name>"
 
 
 imagePullSecrets: []

@@ -9,7 +9,7 @@ data:
     #    namespaces: [default]
     exporters:
       otlp:
-        endpoint: "https://otlp.nr-data.net:4318"
+        endpoint: {{ .Values.newRelic.endpoint }}
         headers:
           api-key: {{ .Values.newRelic.apiKey }}
       debug:
@@ -29,7 +29,9 @@ data:
           - key: "category"
             action: upsert
             value: "kubernetes"
-
+          - key: k8s.cluster.name
+            action: upsert
+            value: {{ .Values.cluster.name }}
     service:
       telemetry:
         logs:

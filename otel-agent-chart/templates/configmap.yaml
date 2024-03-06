@@ -392,7 +392,7 @@ data:
       
     exporters:
       otlp:
-        endpoint: "https://otlp.nr-data.net:4318"
+        endpoint: {{ .Values.newRelic.endpoint }}
         headers:
           api-key: {{ .Values.newRelic.apiKey }}
       logging:
