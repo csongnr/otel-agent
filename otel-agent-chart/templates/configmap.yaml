@@ -290,8 +290,43 @@ data:
             #       source_labels:
             #         - __meta_kubernetes_namespace
             #       target_label: namespace
-  
+      filelog:
+        include:
+          - /var/log/pods/*/*/*.log
+          - /var/log/*/*
+          - /var/log/*
+          - /var/log/alternatives.log
+          - /var/log/cloud-init.log
+          - /var/log/auth.log
+          - /var/log/dpkg.log
+          - /var/log/syslog
+          - /var/log/messages
+          - /var/log/secure
+          - /var/log/yum.log
+          - /var/log/alternatives.log
+        exclude:
+          # Exclude logs from all containers named otel-agent-chart and otelcontribcol
+          - /var/log/pods/*/otel-agent-chart/*.log
+          - /var/log/pods/*/otelcontribcol/*.log
+          - /var/log/pods/*/konnectivity-agent/*.log
+          # - /var/log/pods/*/containers/*-exec.log
+        start_at: beginning
+        include_file_path: true
+        include_file_name: true
+
     processors:
+      transform/truncate:
+        trace_statements:
+          - context: span
+            statements:
+              - truncate_all(attributes, 4095)
+              - truncate_all(resource.attributes, 4095)
+        log_statements:
+          - context: log
+            statements:
+              - truncate_all(attributes, 4095)
+              - truncate_all(resource.attributes, 4095) 
+
       metricstransform:
         transforms:
           - include: k8s.node.condition_ready 
@@ -389,7 +424,7 @@ data:
           - sources: 
             - from: resource_attribute
               name: k8s.pod.uid
-      
+              
     exporters:
       otlp:
         endpoint: {{ .Values.newRelic.endpoint }}
@@ -420,3 +455,7 @@ data:
             - resource
             - k8sattributes
           exporters: [otlp, logging]
+        logs:
+          receivers: [otlp, filelog]
+          processors: [transform/truncate, resource, k8sattributes]
+          exporters: [logging, otlp]
