@@ -20,7 +20,7 @@ data:
         protocol:
           otlp:
             headers:
-              api-key: ""
+              api-key: {{ .Values.newRelic.apiKey }}
             tls:
               insecure: true
         resolver:

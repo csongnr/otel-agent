@@ -15,7 +15,7 @@ data:
       otlp/newrelic:
         endpoint: "https://otlp.nr-data.net:4317"
         headers:
-          api-key: ""
+          api-key: {{ .Values.newRelic.apiKey }}
       debug:
         verbosity: detailed
         sampling_initial: 5
