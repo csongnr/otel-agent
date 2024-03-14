@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-gateway-config
+data:
+  otel-gateway-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "localhost:4317"
+          http:
+            endpoint: "localhost:4318"
+    exporters:
+      otlp/newrelic:
+        endpoint: "https://otlp.nr-data.net:4317"
+        headers:
+          api-key: ""
+      debug:
+        verbosity: detailed
+        sampling_initial: 5
+        sampling_thereafter: 200
+      logging:
+        verbosity: detailed
+    service:
+      telemetry:
+        logs:
+          level: debug
+      pipelines:
+        traces:
+          receivers: [otlp]
+          exporters: [otlp/newrelic, debug, logging]
+        metrics:
+          receivers: [otlp]
+          exporters: [otlp/newrelic, debug, logging]
+        logs:
+          receivers: [otlp]
+          exporters: [otlp/newrelic, debug, logging]

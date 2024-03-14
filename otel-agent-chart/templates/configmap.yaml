@@ -393,8 +393,8 @@ data:
     exporters:
       otlp:
         endpoint: {{ .Values.newRelic.endpoint }}
-        headers:
-          api-key: {{ .Values.newRelic.apiKey }}
+        tls:
+          insecure: true
       logging:
         verbosity: detailed
 
@@ -405,7 +405,7 @@ data:
       pipelines:
         metrics:
           receivers: [otlp, k8s_cluster, hostmetrics, kubeletstats, prometheus]
-          processors: 
+          processors:
             - metricstransform
             - filter/exclude_cpu_utilization
             - filter/exclude_memory_utilization
@@ -419,4 +419,4 @@ data:
             - attributes/exclude_system_paging
             - resource
             - k8sattributes
-          exporters: [otlp, logging]
+          exporters: [otlp]

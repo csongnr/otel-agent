@@ -10,12 +10,23 @@ data:
     exporters:
       otlp:
         endpoint: {{ .Values.newRelic.endpoint }}
-        headers:
-          api-key: {{ .Values.newRelic.apiKey }}
+        tls:
+          insecure: true
       debug:
         verbosity: detailed
         sampling_initial: 5
         sampling_thereafter: 200
+      loadbalancing:
+        protocol:
+          otlp:
+            headers:
+              api-key: ""
+            tls:
+              insecure: true
+        resolver:
+          static:
+            hostnames:
+              - https://otlp.nr-data.net:4317
 
     processors:
       resource:
