@@ -7,9 +7,24 @@ data:
     receivers:
       k8s_events:
     #    namespaces: [default]
+    processors:
+      resource:
+        attributes:
+          - key: "event.name"
+            action: upsert
+            value: "InfrastructureEvent"
+          - key: "event.domain"
+            action: upsert
+            value: "newrelic-otel-event"
+          - key: "category"
+            action: upsert
+            value: "kubernetes"
+          - key: k8s.cluster.name
+            action: upsert
+            value: {{ .Values.cluster.name }}
     exporters:
       otlp:
-        endpoint: {{ .Values.newRelic.endpoint }}
+        endpoint: {{ .Values.newRelic.grpcGatewayEndpoint }}
         tls:
           insecure: true
       debug:
@@ -27,22 +42,6 @@ data:
           static:
             hostnames:
               - https://otlp.nr-data.net:4317
-
-    processors:
-      resource:
-        attributes:
-          - key: "event.name"
-            action: upsert
-            value: "InfrastructureEvent"
-          - key: "event.domain"
-            action: upsert
-            value: "newrelic-otel-event"
-          - key: "category"
-            action: upsert
-            value: "kubernetes"
-          - key: k8s.cluster.name
-            action: upsert
-            value: {{ .Values.cluster.name }}
     service:
       telemetry:
         logs:

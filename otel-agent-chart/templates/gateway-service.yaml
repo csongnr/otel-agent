@@ -6,7 +6,7 @@ metadata:
     app: opentelemetry
     component: otel-gateway
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: otlp-grpc # Default endpoint for OpenTelemetry gRPC receiver.
       port: 4317
@@ -18,3 +18,4 @@ spec:
       targetPort: 4318
   selector:
     component: otel-gateway
+  internalTrafficPolicy: Cluster

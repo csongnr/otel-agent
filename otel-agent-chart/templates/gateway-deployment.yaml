@@ -35,6 +35,12 @@ spec:
           ports:
             - containerPort: 4317   # otlp grpc
             - containerPort: 4318   # otlp http
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
           volumeMounts:
             - name: otel-gateway-config-vol
               mountPath: /conf

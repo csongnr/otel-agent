@@ -8,12 +8,16 @@ data:
       otlp:
         protocols:
           grpc:
-            endpoint: "localhost:4317"
+            endpoint: ${env:MY_POD_IP}:4317
           http:
-            endpoint: "localhost:4318"
+            endpoint: ${env:MY_POD_IP}:4318
+
+    processors:
+      batch:
+
     exporters:
       otlp/newrelic:
-        endpoint: "https://otlp.nr-data.net:4317"
+        endpoint: {{ .Values.newRelic.endpoint }}
         headers:
           api-key: {{ .Values.newRelic.apiKey }}
       debug:
@@ -22,6 +26,7 @@ data:
         sampling_thereafter: 200
       logging:
         verbosity: detailed
+
     service:
       telemetry:
         logs:
@@ -29,10 +34,13 @@ data:
       pipelines:
         traces:
           receivers: [otlp]
-          exporters: [otlp/newrelic, debug, logging]
+          processors: [batch]
+          exporters: [otlp/newrelic, debug]
         metrics:
           receivers: [otlp]
-          exporters: [otlp/newrelic, debug, logging]
+          processors: [batch]
+          exporters: [otlp/newrelic, debug]
         logs:
           receivers: [otlp]
-          exporters: [otlp/newrelic, debug, logging]
+          processors: [batch]
+          exporters: [otlp/newrelic, debug]
