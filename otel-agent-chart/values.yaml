@@ -13,7 +13,7 @@ image:
 newRelic:
   apiKey: '<ingest-key>'
   endpoint: "https://staging-otlp.nr-data.net:4317"
-  # endpoint: "https://otlp.nr-data.net:4318"
+  # endpoint: "https://otlp.nr-data.net:4317"
 cluster:
   name: "<cluster-name>"
 
