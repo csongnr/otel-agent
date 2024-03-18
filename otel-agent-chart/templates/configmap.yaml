@@ -382,8 +382,7 @@ data:
 
       experimental_metricsgeneration:
         rules:
-          - name: filesystem_usage_percentage
-            # unit: bytes
+          - name: container_fs_usage_percentage
             type: calculate
             metric1: container_fs_usage_bytes
             metric2: container_fs_limit_bytes
