@@ -382,7 +382,7 @@ data:
 
       experimental_metricsgeneration:
         rules:
-          - name: filesystem_usage_percentage
+          - name: container_fs_usage_percentage
             # unit: bytes
             type: calculate
             metric1: container_fs_usage_bytes
@@ -445,6 +445,17 @@ data:
           - sources: 
             - from: resource_attribute
               name: k8s.pod.uid
+              
+      # attributes/include_pod_namespace_association:
+      #   include: 
+      #     match_type: strict 
+      #     metric_names:
+      #       - container_fs_usage_bytes
+      #       - container_fs_limit_bytes
+      #   actions: 
+      #     - key: pod
+      #       action: insert
+      #       from_attribute: k8s.pod.name
 
       batch: 
 
@@ -478,6 +489,7 @@ data:
             - attributes/exclude_system_paging
             - resource
             - k8sattributes
+            # - attributes/include_pod_namespace_association
             - batch
           exporters: [otlp, logging]
         logs:
