@@ -35,6 +35,7 @@ data:
           - key: newrelicOnly
             action: upsert
             value: 'true'
+
     service:
       telemetry:
         logs:
