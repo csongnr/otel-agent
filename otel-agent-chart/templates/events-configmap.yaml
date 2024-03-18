@@ -32,6 +32,9 @@ data:
           - key: k8s.cluster.name
             action: upsert
             value: {{ .Values.cluster.name }}
+          - key: newrelicOnly
+            action: upsert
+            value: 'true'
     service:
       telemetry:
         logs:
