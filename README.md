@@ -37,7 +37,7 @@ helm install nodeexporter prometheus-community/prometheus-node-exporter
 ### 4. From root directory of this repository, run:
 ```
 cd ~/otel-agent 
-helm install otel-agent-release otel-agent
+helm install otel-agent-release otel-agent-chart
 ```
 
 ## Confirm installation
@@ -72,12 +72,12 @@ Because the config is mounted on a configmap, any changes to the [opentelemetry 
 Uninstall the release and re-install the release:
 ```
 helm uninstall otel-agent-release 
-helm install otel-agent-release otel-agent
+helm install otel-agent-release otel-agent-chart
 ```
 **OR:**
 Upgrade the release and then kill the pod:
 ```
-helm upgrade otel-agent-release otel-agent
+helm upgrade otel-agent-release otel-agent-chart
 kubectl delete pod <pod-name> 
 ```
 
