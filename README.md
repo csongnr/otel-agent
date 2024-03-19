@@ -66,9 +66,7 @@ FROM Log SELECT *
 ## Development notes
 ### Iterating on config changes: 
 Because the config is mounted on a configmap, any changes to the [opentelemetry configuration](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/templates/configmap.yaml#L6-L485) at this time require you to either uninstall the release and re-install the release, or upgrade the release and then kill the pod so it spins up w/ the latest changes.
-This will be updated soon so that you can just upgrade the release to reflect changes. 
-
- **Note:** This fix will be added to the chart soon  
+ **Note:** This will be updated soon so that you can just upgrade the release to reflect changes. 
  
 Uninstall the release and re-install the release:
 ```
