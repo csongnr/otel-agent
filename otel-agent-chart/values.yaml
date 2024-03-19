@@ -13,8 +13,6 @@ image:
 newRelic:
   apiKey: "<NR-KEY>"
   endpoint: "https://staging-otlp.nr-data.net:4317"
-  grpcGatewayEndpoint: "otel-gateway:4317"
-  httpGatewayEndpoint: "otel-gateway:4318"
 cluster:
   name: "<cluster-name>"
 

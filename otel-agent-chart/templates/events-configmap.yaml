@@ -24,7 +24,7 @@ data:
             value: {{ .Values.cluster.name }}
     exporters:
       otlp:
-        endpoint: {{ .Values.newRelic.grpcGatewayEndpoint }}
+        endpoint: "otel-gateway:4317"
         tls:
           insecure: true
       debug:
