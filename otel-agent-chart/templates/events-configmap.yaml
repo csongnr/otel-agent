@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: otel-events-config
 data:
-  config.yaml: |
+  events-config.yaml: |
     receivers:
       k8s_events:
     #    namespaces: [default]
@@ -31,21 +31,12 @@ data:
         verbosity: detailed
         sampling_initial: 5
         sampling_thereafter: 200
-      loadbalancing:
-        protocol:
-          otlp:
-            headers:
-              api-key: {{ .Values.newRelic.apiKey }}
-            tls:
-              insecure: true
-        resolver:
-          static:
-            hostnames:
-              - https://otlp.nr-data.net:4317
     service:
       telemetry:
         logs:
           level: "debug"
+        metrics:
+          address: localhost:9999
       pipelines:
         logs:
           receivers: [k8s_events]

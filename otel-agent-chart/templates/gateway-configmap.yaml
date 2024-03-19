@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: otel-gateway-config
 data:
-  otel-gateway-config.yaml: |
+  gateway-config.yaml: |
     receivers:
       otlp:
         protocols:
@@ -24,8 +24,6 @@ data:
         verbosity: detailed
         sampling_initial: 5
         sampling_thereafter: 200
-      logging:
-        verbosity: detailed
 
     service:
       telemetry:

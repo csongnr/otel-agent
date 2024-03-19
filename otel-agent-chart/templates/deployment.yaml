@@ -1,27 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otelcontribcol
+  name: otel-deployment
   labels:
-    app: otelcontribcol
+    app: opentelemetry
+    component: gateway-collector
 spec:
   replicas: 1
+  minReadySeconds: 5
   selector:
     matchLabels:
-      app: otelcontribcol
+      app: opentelemetry
+      component: gateway-collector
   template:
     metadata:
       labels:
-        app: otelcontribcol
+        app: opentelemetry
+        component: gateway-collector
     spec:
       serviceAccountName: daemonset-serviceaccount
       containers:
-        - name: otelcontribcol
+        - name: otel-events-collector
           image: otel/opentelemetry-collector-contrib:latest # specify image
-          args: ["--config", "/etc/config/config.yaml"]
-          volumeMounts:
-            - name: config
-              mountPath: /etc/config
+          args: ["--config", "/config/events-config.yaml"]
           imagePullPolicy: IfNotPresent
           env:
             - name: KUBE_NODE_NAME
@@ -29,7 +30,37 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
+          volumeMounts:
+            - name: events-config
+              mountPath: /config
+        - name: otel-gateway
+          image: otel/opentelemetry-collector:latest
+          command:
+            - '/otelcol'
+            - '--config=/config/gateway-config.yaml'
+          resources:
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 400Mi
+          ports:
+            - containerPort: 4317   # otlp grpc
+            - containerPort: 4318   # otlp http
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: gateway-config
+              mountPath: /config
       volumes:
-        - name: config
+        - name: events-config
           configMap:
             name: otel-events-config
+        - name: gateway-config
+          configMap:
+            name: otel-gateway-config
