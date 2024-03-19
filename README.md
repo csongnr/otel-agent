@@ -73,12 +73,12 @@ This will be updated soon so that you can just upgrade the release to reflect ch
 Uninstall the release and re-install the release:
 ```
 helm uninstall otel-agent-release 
-helm install otel-agent-release otel-agent-chart
+helm install otel-agent-release otel-agent
 ```
-OR:
+**OR:**
 Upgrade the release and then kill the pod:
 ```
-helm upgrade otel-agent-release otel-agent-chart 
+helm upgrade otel-agent-release otel-agent
 kubectl delete pod <pod-name> 
 ```
 
