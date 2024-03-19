@@ -14,7 +14,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
     spec:
-      serviceAccountName: daemonset-serviceaccount
+      serviceAccountName: otel-service-account
       containers: 
         - name: {{ .Chart.Name }}
           securityContext:

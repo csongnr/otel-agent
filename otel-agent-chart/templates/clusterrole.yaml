@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: otel-collector-cluster-role
+  name: otel-cluster-role
 rules: 
   - apiGroups:
     - ""
@@ -62,14 +62,3 @@ rules:
       - get
       - list
       - watch
-  - apiGroups: 
-    - "events.k8s.io"
-    resources: 
-    - "events"
-    verbs: 
-    - "watch"
-    - "list"
-  - nonResourceURLs: 
-    - "/metrics"
-    verbs: 
-    - "get"

@@ -18,7 +18,7 @@ spec:
         app: opentelemetry
         component: gateway-collector
     spec:
-      serviceAccountName: daemonset-serviceaccount
+      serviceAccountName: otel-service-account
       containers:
         - name: otel-events-collector
           image: otel/opentelemetry-collector-contrib:latest # specify image
