@@ -5,9 +5,16 @@ metadata:
 data:
   events-config.yaml: |
     receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: ${env:MY_POD_IP}:4317
+          http:
+            endpoint: ${env:MY_POD_IP}:4318
       k8s_events:
     #    namespaces: [default]
     processors:
+      batch:
       resource:
         attributes:
           - key: "event.name"
@@ -27,6 +34,10 @@ data:
         endpoint: "otel-gateway:4317"
         tls:
           insecure: true
+      otlp/newrelic:
+        endpoint: {{ .Values.newRelic.endpoint }}
+        headers:
+          api-key: {{ .Values.newRelic.apiKey }}
       debug:
         verbosity: detailed
         sampling_initial: 5
@@ -35,10 +46,20 @@ data:
       telemetry:
         logs:
           level: "debug"
-        metrics:
-          address: localhost:9999
       pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp/newrelic, debug]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp/newrelic, debug]
         logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp/newrelic, debug]
+        logs/events:
           receivers: [k8s_events]
-          processors: [resource]
+          processors: [resource, batch]
           exporters: [otlp, debug]
