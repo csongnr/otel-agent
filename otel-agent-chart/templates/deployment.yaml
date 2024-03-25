@@ -20,9 +20,9 @@ spec:
     spec:
       serviceAccountName: otel-service-account
       containers:
-        - name: otel-events-collector
+        - name: otel-collector
           image: otel/opentelemetry-collector-contrib:latest # specify image
-          args: ["--config", "/config/events-config.yaml"]
+          args: ["--config", "/config/deployment-config.yaml"]
           imagePullPolicy: IfNotPresent
           env:
             - name: KUBE_NODE_NAME
@@ -39,36 +39,9 @@ spec:
             - containerPort: 4317   # otlp grpc
             - containerPort: 4318   # otlp http
           volumeMounts:
-            - name: events-config
+            - name: deployment-config
               mountPath: /config
-{{/*        - name: otel-gateway*/}}
-{{/*          image: otel/opentelemetry-collector:latest*/}}
-{{/*          command:*/}}
-{{/*            - '/otelcol'*/}}
-{{/*            - '--config=/config/gateway-config.yaml'*/}}
-{{/*          resources:*/}}
-{{/*            limits:*/}}
-{{/*              cpu: '1'*/}}
-{{/*              memory: 2Gi*/}}
-{{/*            requests:*/}}
-{{/*              cpu: 200m*/}}
-{{/*              memory: 400Mi*/}}
-{{/*          ports:*/}}
-{{/*            - containerPort: 4317   # otlp grpc*/}}
-{{/*            - containerPort: 4318   # otlp http*/}}
-{{/*          env:*/}}
-{{/*            - name: MY_POD_IP*/}}
-{{/*              valueFrom:*/}}
-{{/*                fieldRef:*/}}
-{{/*                  apiVersion: v1*/}}
-{{/*                  fieldPath: status.podIP*/}}
-{{/*          volumeMounts:*/}}
-{{/*            - name: gateway-config*/}}
-{{/*              mountPath: /config*/}}
       volumes:
-        - name: events-config
+        - name: deployment-config
           configMap:
-            name: otel-events-config
-        # - name: gateway-config
-        #   configMap:
-        #     name: otel-gateway-config
+            name: otel-deployment-config

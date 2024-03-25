@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: otel-events-config
+  name: otel-deployment-config
 data:
-  events-config.yaml: |
+  deployment-config.yaml: |
     receivers:
       otlp:
         protocols:
