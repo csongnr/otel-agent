@@ -290,8 +290,38 @@ data:
             #       source_labels:
             #         - __meta_kubernetes_namespace
             #       target_label: namespace
-  
+      filelog:
+        include:
+          - /var/log/pods/*/*/*.log
+          - /var/log/*/*
+          - /var/log/*
+          - /var/log/alternatives.log
+          - /var/log/cloud-init.log
+          - /var/log/auth.log
+          - /var/log/dpkg.log
+          - /var/log/syslog
+          - /var/log/messages
+          - /var/log/secure
+          - /var/log/yum.log
+          - /var/log/alternatives.log
+        exclude:
+          # Exclude logs from all containers named otel-agent-chart and otelcontribcol
+          - /var/log/pods/*/otel-agent-chart/*.log
+          - /var/log/pods/*/otelcontribcol/*.log
+          - /var/log/pods/*/konnectivity-agent/*.log
+          # - /var/log/pods/*/containers/*-exec.log
+        start_at: beginning
+        include_file_path: true
+        include_file_name: true
+
     processors:
+      transform/truncate:
+        log_statements:
+          - context: log
+            statements:
+              - truncate_all(attributes, 4095)
+              - truncate_all(resource.attributes, 4095)
+
       metricstransform:
         transforms:
           - include: k8s.node.condition_ready 
@@ -350,6 +380,29 @@ data:
           datapoint:
             - 'IsMatch(metric.name, "^system.network.*") == true and attributes["device"] == "lo"'
 
+      experimental_metricsgeneration:
+        rules:
+          - name: container_fs_usage_percentage
+            type: calculate
+            metric1: container_fs_usage_bytes
+            metric2: container_fs_limit_bytes
+            operation: divide
+          - name: kube_deployment_pods_missing
+            type: calculate
+            metric1: kube_deployment_spec_replicas
+            metric2: kube_deployment_status_replicas
+            operation: subtract
+          - name: kube_statefulset_pods_missing
+            type: calculate
+            metric1: kube_statefulset_replicas
+            metric2: kube_statefulset_status_replicas
+            operation: subtract
+          - name: kube_daemonset_pods_missing
+            type: calculate
+            metric1: kube_daemonset_status_desired_number_scheduled
+            metric2: kube_daemonset_status_current_number_scheduled
+            operation: subtract
+
       attributes/exclude_system_paging:
         include:
           match_type: strict
@@ -358,6 +411,7 @@ data:
         actions:
           - key: type
             action: delete
+
       resource:
         attributes:
           - key: host.id
@@ -372,6 +426,7 @@ data:
             value: 'true'
           - key: service.name
             action: delete
+
       k8sattributes:
         auth_type: "serviceAccount"
         passthrough: false
@@ -389,7 +444,9 @@ data:
           - sources: 
             - from: resource_attribute
               name: k8s.pod.uid
-      
+
+      batch:
+
     exporters:
       otlp:
         endpoint: "otel-gateway:4317"
@@ -407,6 +464,7 @@ data:
           receivers: [otlp, k8s_cluster, hostmetrics, kubeletstats, prometheus]
           processors:
             - metricstransform
+            - experimental_metricsgeneration
             - filter/exclude_cpu_utilization
             - filter/exclude_memory_utilization
             - filter/exclude_memory_usage
@@ -419,4 +477,9 @@ data:
             - attributes/exclude_system_paging
             - resource
             - k8sattributes
-          exporters: [otlp]
+            - batch
+          exporters: [otlp, logging]
+        logs:
+          receivers: [otlp, filelog]
+          processors: [transform/truncate, resource, k8sattributes, batch]
+          exporters: [logging, otlp]

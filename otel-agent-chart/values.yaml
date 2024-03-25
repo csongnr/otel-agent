@@ -11,10 +11,11 @@ image:
   tag: "0.91.0"
 
 newRelic:
-  apiKey: "<NR-KEY>"
-  endpoint: "https://staging-otlp.nr-data.net:4317"
+  apiKey: < NR License Key > 
+  endpoint: "https://otlp.nr-data.net:4318"
+  
 cluster:
-  name: "<cluster-name>"
+  name: <cluster name> 
 
 
 imagePullSecrets: []
