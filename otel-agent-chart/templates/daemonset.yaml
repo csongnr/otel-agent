@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/daemonset-configmap.yaml") . | sha256sum }}
     spec:
       serviceAccountName: otel-service-account
       containers: 
