@@ -50,10 +50,11 @@ data:
         logs:
           level: "debug"
       pipelines:
-        traces:
-          receivers: [otlp]
-          processors: [batch]
-          exporters: [otlp/newrelic, debug]
+        # Uncomment below if exporting traces to NR
+        # traces:
+        #   receivers: [otlp]
+        #   processors: [batch]
+        #   exporters: [otlp/newrelic, debug]
         metrics:
           receivers: [otlp]
           processors: [batch]
