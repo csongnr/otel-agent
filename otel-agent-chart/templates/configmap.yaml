@@ -403,6 +403,56 @@ data:
             metric2: kube_daemonset_status_current_number_scheduled 
             operation: subtract 
 
+      ##filter out kube_pod_container_status_* when metric = 0
+      ## kube_pod_container_status_[waiting|running|terminated|ready]
+      ## create kube_pod_container_status: with attribute waiting, running, terminated, ready, and a 1 or 0 based on current status 
+      metricstransform/kube_pod_status_phase:
+        transforms:
+          - include: 'kube_pod_container_status_waiting'
+            match_type: strict 
+            action: update
+            new_name: 'kube_pod_container_status'
+            operations:
+            - action: add_label
+              new_label: phase
+              new_value: waiting 
+          - include: 'kube_pod_container_status_running'
+            match_type: strict
+            action: update
+            new_name: 'kube_pod_container_status'
+            operations:
+            - action: add_label
+              new_label: phase
+              new_value: running 
+          - include: 'kube_pod_container_status_terminated'
+            match_type: strict
+            action: update
+            new_name: 'kube_pod_container_status'
+            operations:
+            - action: add_label
+              new_label: phase
+              new_value: terminated 
+          - include: 'kube_pod_container_status_ready'
+            match_type: strict
+            action: update
+            new_name: 'kube_pod_container_status'
+            operations:
+            - action: add_label
+              new_label: phase
+              new_value: ready 
+
+      filter/exclude_zero_value_kube_pod_container_status:
+        metrics:
+          datapoint:
+            - metric.name == "kube_pod_container_status" and value_double == 0.0
+
+      # transform:
+      #   error_mode: ignore
+      #   metric_statements: 
+      #   - context: datapoint 
+      #     statements: 
+      #       - 
+
       attributes/exclude_system_paging:
         include:
           match_type: strict
@@ -464,7 +514,9 @@ data:
           receivers: [otlp, k8s_cluster, hostmetrics, kubeletstats, prometheus]
           processors: 
             - metricstransform
-            - experimental_metricsgeneration
+            # - experimental_metricsgeneration
+            - metricstransform/kube_pod_status_phase
+            - filter/exclude_zero_value_kube_pod_container_status
             - filter/exclude_cpu_utilization
             - filter/exclude_memory_utilization
             - filter/exclude_memory_usage
