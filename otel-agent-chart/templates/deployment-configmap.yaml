@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: otel-deployment-config
+  name: {{ include "otel-agent-chart.fullname" . }}-deployment-config
 data:
   deployment-config.yaml: |
     receivers:

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otel-deployment
+  name: {{ include "otel-agent-chart.fullname" . }}-deployment
   labels:
     app: opentelemetry
     component: gateway-collector
@@ -18,7 +18,7 @@ spec:
         app: opentelemetry
         component: gateway-collector
     spec:
-      serviceAccountName: otel-service-account
+      serviceAccountName: {{ include "otel-agent-chart.fullname" . }}
       containers:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:latest # specify image
@@ -44,4 +44,16 @@ spec:
       volumes:
         - name: deployment-config
           configMap:
-            name: otel-deployment-config
+            name: {{ include "otel-agent-chart.fullname" . }}-deployment-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ include "otel-agent-chart.fullname" . }}
+  name: {{ include "otel-agent-chart.fullname" . }}-daemonset
   labels:
-    app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
     helm.sh/chart: {{ include "otel-agent-chart.chart" . }}
+    app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
 spec: 
   selector:
     matchLabels:
@@ -14,7 +14,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
     spec:
-      serviceAccountName: otel-service-account
+      serviceAccountName: {{ include "otel-agent-chart.fullname" . }}
       containers: 
         - name: {{ .Chart.Name }}
           securityContext:
@@ -63,7 +63,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: otel-config
+            name: {{ include "otel-agent-chart.fullname" . }}-daemonset-config
         - name: varlogpods 
           hostPath:
             path: /var/log/pods

@@ -1,7 +1,7 @@
 apiVersion: v1 
 kind: ConfigMap
 metadata:
-  name: otel-config
+  name: {{ include "otel-agent-chart.fullname" . }}-daemonset-config
 data:
   otel-collector-config.yaml: |
     receivers:
