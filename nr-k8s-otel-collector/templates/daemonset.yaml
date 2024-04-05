@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ include "otel-agent-chart.fullname" . }}-daemonset
+  name: {{ include "nr-k8s-otel-collector.fullname" . }}-daemonset
   namespace: {{ .Release.Namespace }}
   labels:
-    helm.sh/chart: {{ include "otel-agent-chart.chart" . }}
-    app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
+    helm.sh/chart: {{ include "nr-k8s-otel-collector.chart" . }}
+    app.kubernetes.io/name: {{ include "nr-k8s-otel-collector.name" . }}
 spec: 
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
+      app.kubernetes.io/name: {{ include "nr-k8s-otel-collector.name" . }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
+        app.kubernetes.io/name: {{ include "nr-k8s-otel-collector.name" . }}
     spec:
-      serviceAccountName: {{ include "otel-agent-chart.fullname" . }}
+      serviceAccountName: {{ include "nr-k8s-otel-collector.fullname" . }}
       containers: 
         - name: {{ .Chart.Name }}
           securityContext:
@@ -64,7 +64,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: {{ include "otel-agent-chart.fullname" . }}-daemonset-config
+            name: {{ include "nr-k8s-otel-collector.fullname" . }}-daemonset-config
         - name: varlogpods 
           hostPath:
             path: /var/log/pods

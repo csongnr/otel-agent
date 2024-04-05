@@ -1,5 +1,5 @@
 apiVersion: v2
-name: otel-agent-chart
+name: nr-k8s-otel-collector
 description: A Helm chart to deploy OpenTelemetry Collector as an agent.
 
 # A chart can be either an 'application' or a 'library' chart.
