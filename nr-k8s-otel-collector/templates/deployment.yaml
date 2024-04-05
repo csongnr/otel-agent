@@ -19,7 +19,7 @@ spec:
         app: opentelemetry
         component: gateway-collector
     spec:
-      serviceAccountName: {{ include "nr-k8s-otel-collector.fullname" . }}
+      serviceAccountName: {{ include "nr-k8s-otel-collector.serviceAccountName" . }}
       containers:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:latest # specify image
