@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ include "otel-agent-chart.fullname" . }}-daemonset
+  namespace: {{ .Release.Namespace }}
   labels:
     helm.sh/chart: {{ include "otel-agent-chart.chart" . }}
     app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}

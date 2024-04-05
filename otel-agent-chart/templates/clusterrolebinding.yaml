@@ -5,7 +5,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: {{ include "otel-agent-chart.fullname" . }}
-    namespace: default
+    namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
   name: {{ include "otel-agent-chart.fullname" . }}
