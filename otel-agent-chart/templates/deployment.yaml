@@ -17,6 +17,8 @@ spec:
       labels:
         app: opentelemetry
         component: gateway-collector
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/deployment-configmap.yaml") . | sha256sum }}
     spec:
       serviceAccountName: otel-service-account
       containers:
