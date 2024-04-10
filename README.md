@@ -10,7 +10,7 @@ Example:
 ```
 newRelic:
   apiKey: "EXAMPLEINGESTLICENSEKEY345878592NRALL"
-  endpoint: "https://otlp.nr-data.net:4318"
+  endpoint: "https://otlp.nr-data.net:4317"
   
 cluster:
   name: "SampleApp" 
