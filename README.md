@@ -23,7 +23,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 helm install nodeexporter prometheus-community/prometheus-node-exporter 
 ```
-2. Comment out [these lines](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/templates/configmap.yaml#L277-L292) in the configuration. 
+2. Comment out [these lines](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/templates/daemonset-configmap.yaml#L277-L292) in the configuration. 
 
 
 ### 4. From root directory of this repository, run:
