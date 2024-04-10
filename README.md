@@ -5,19 +5,11 @@
 git clone https://github.com/csongnr/otel-agent.git 
 ```
 
-### 2. Add kube-state-metrics to your cluster: 
- **Note:** This will be added to the chart soon 
-```
-helm repo add prometheus-community \ https://prometheus-community.github.io/helm-charts 
-helm repo update 
-helm install kube-state-metrics prometheus-community/kube-state-metrics
-```
-
-### 3. Update config [here](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/values.yaml#L13-L18) to add a cluster name, and New Relic Ingest - License key
+### 2. Update config [here](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/values.yaml#L13-L18) to add a cluster name, and New Relic Ingest - License key
 Example: 
 ```
 newRelic:
-  apiKey: "INGESTLICENSEKEY3458278592NRALL"
+  apiKey: "EXAMPLEINGESTLICENSEKEY345878592NRALL"
   endpoint: "https://otlp.nr-data.net:4318"
   
 cluster:
@@ -64,21 +56,11 @@ FROM Log SELECT *
 ```
 
 ## Development notes
-### Iterating on config changes: 
-Because the config is mounted on a configmap, any changes to the [opentelemetry configuration](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/templates/configmap.yaml#L6-L485) at this time require you to either uninstall the release and re-install the release, or upgrade the release and then kill the pod so it spins up w/ the latest changes.
-
-**Note:** This will be updated soon so that you can just upgrade the release to reflect changes. 
- 
-Uninstall the release and re-install the release:
-```
-helm uninstall otel-agent-release 
-helm install otel-agent-release otel-agent-chart
-```
-**OR:**
-Upgrade the release and then kill the pod:
+### Iterating on otel config: 
+1. Make changes to the [opentelemetry configuration](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/templates/configmap.yaml#L6-L485) 
+2. Upgrade the release:
 ```
 helm upgrade otel-agent-release otel-agent-chart
-kubectl delete pod <pod-name> 
 ```
 
 
