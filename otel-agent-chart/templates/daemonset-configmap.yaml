@@ -411,35 +411,27 @@ data:
           - include: 'kube_pod_container_status_waiting'
             match_type: strict 
             action: update
-            new_name: 'kube_pod_container_status'
+            new_name: 'kube_pod_container_status_phase'
             operations:
             - action: add_label
-              new_label: phase
+              new_label: container_phase
               new_value: waiting 
           - include: 'kube_pod_container_status_running'
             match_type: strict
             action: update
-            new_name: 'kube_pod_container_status'
+            new_name: 'kube_pod_container_status_phase'
             operations:
             - action: add_label
-              new_label: phase
+              new_label: container_phase
               new_value: running 
           - include: 'kube_pod_container_status_terminated'
             match_type: strict
             action: update
-            new_name: 'kube_pod_container_status'
+            new_name: 'kube_pod_container_status_phase'
             operations:
             - action: add_label
-              new_label: phase
+              new_label: container_phase
               new_value: terminated 
-          - include: 'kube_pod_container_status_ready'
-            match_type: strict
-            action: update
-            new_name: 'kube_pod_container_status'
-            operations:
-            - action: add_label
-              new_label: phase
-              new_value: ready 
 
       filter/exclude_zero_value_kube_pod_container_status:
         metrics:
