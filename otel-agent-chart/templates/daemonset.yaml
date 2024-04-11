@@ -47,9 +47,10 @@ spec:
               valueFrom: 
                 fieldRef:
                   fieldPath: metadata.uid
-            - name: K8S_NODE_NAME
+            - name: KUBE_NODE_NAME
               valueFrom:
                 fieldRef:
+                  apiVersion: v1
                   fieldPath: spec.nodeName
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: service.instance.id=$(POD_NAME),k8s.pod.uid=$(POD_UID)
