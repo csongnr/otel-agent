@@ -320,7 +320,7 @@ data:
           - context: log
             statements:
               - truncate_all(attributes, 4095)
-              - truncate_all(resource.attributes, 4095) 
+              - truncate_all(resource.attributes, 4095)
 
       metricstransform:
         transforms:
@@ -387,21 +387,21 @@ data:
             metric1: container_fs_usage_bytes
             metric2: container_fs_limit_bytes
             operation: divide
-          - name: kube_deployment_pods_missing 
+          - name: kube_deployment_pods_missing
             type: calculate
             metric1: kube_deployment_spec_replicas
-            metric2: kube_deployment_status_replicas 
-            operation: subtract 
+            metric2: kube_deployment_status_replicas
+            operation: subtract
           - name: kube_statefulset_pods_missing
             type: calculate
             metric1: kube_statefulset_replicas
             metric2: kube_statefulset_status_replicas
-            operation: subtract 
+            operation: subtract
           - name: kube_daemonset_pods_missing
             type: calculate
             metric1: kube_daemonset_status_desired_number_scheduled
-            metric2: kube_daemonset_status_current_number_scheduled 
-            operation: subtract 
+            metric2: kube_daemonset_status_current_number_scheduled
+            operation: subtract
 
       ##filter out kube_pod_container_status_* when metric = 0
       ## kube_pod_container_status_[waiting|running|terminated|ready]
@@ -461,13 +461,13 @@ data:
         actions:
           - key: type
             action: delete
-      
+
       resource:
         attributes:
           - key: host.id
             from_attribute: host.name
             action: upsert
-          # UPSERT ONLY IF CLUSTER NAME NOT FONUD???
+          # UPSERT ONLY IF CLUSTER NAME NOT FOUND???
           - key: k8s.cluster.name
             action: upsert
             value: {{ .Values.cluster.name }}
@@ -495,13 +495,13 @@ data:
             - from: resource_attribute
               name: k8s.pod.uid
 
-      batch: 
+      batch:
 
     exporters:
       otlp:
-        endpoint: {{ .Values.newRelic.endpoint }}
-        headers:
-          api-key: {{ .Values.newRelic.apiKey }}
+        endpoint: "otel-gateway:4317"
+        tls:
+          insecure: true
       logging:
         verbosity: detailed
 
@@ -512,7 +512,7 @@ data:
       pipelines:
         metrics:
           receivers: [otlp, k8s_cluster, hostmetrics, kubeletstats, prometheus]
-          processors: 
+          processors:
             - metricstransform
             # - experimental_metricsgeneration
             - metricstransform/kube_pod_status_phase

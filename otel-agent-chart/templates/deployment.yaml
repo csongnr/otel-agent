@@ -1,27 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otelcontribcol
+  name: otel-deployment
   labels:
-    app: otelcontribcol
+    app: opentelemetry
+    component: gateway-collector
 spec:
   replicas: 1
+  minReadySeconds: 5
   selector:
     matchLabels:
-      app: otelcontribcol
+      app: opentelemetry
+      component: gateway-collector
   template:
     metadata:
       labels:
-        app: otelcontribcol
+        app: opentelemetry
+        component: gateway-collector
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/deployment-configmap.yaml") . | sha256sum }}
     spec:
-      serviceAccountName: daemonset-serviceaccount
+      serviceAccountName: otel-service-account
       containers:
-        - name: otelcontribcol
+        - name: otel-collector
           image: otel/opentelemetry-collector-contrib:latest # specify image
-          args: ["--config", "/etc/config/config.yaml"]
-          volumeMounts:
-            - name: config
-              mountPath: /etc/config
+          args: ["--config", "/config/deployment-config.yaml"]
           imagePullPolicy: IfNotPresent
           env:
             - name: KUBE_NODE_NAME
@@ -29,7 +32,18 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          ports:
+            - containerPort: 4317   # otlp grpc
+            - containerPort: 4318   # otlp http
+          volumeMounts:
+            - name: deployment-config
+              mountPath: /config
       volumes:
-        - name: config
+        - name: deployment-config
           configMap:
-            name: otel-events-config
+            name: otel-deployment-config
