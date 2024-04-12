@@ -11,13 +11,13 @@ spec:
   minReadySeconds: 5
   selector:
     matchLabels:
-      app: opentelemetry
-      component: gateway-collector
+      {{- include "nr-k8s-otel-collector.selectorLabels" . | nindent 6 }}
+      component: deployment
   template:
     metadata:
       labels:
-        app: opentelemetry
-        component: gateway-collector
+        {{- include "nr-k8s-otel-collector.selectorLabels" . | nindent 8 }}
+        component: deployment
     spec:
       serviceAccountName: {{ include "nr-k8s-otel-collector.serviceAccountName" . }}
       containers:

@@ -18,5 +18,6 @@ spec:
       protocol: TCP
       targetPort: 4318
   selector:
-    component: gateway-collector
+    {{- include "nr-k8s-otel-collector.selectorLabels" . | nindent 4 }}
+    component: deployment
   internalTrafficPolicy: Cluster
