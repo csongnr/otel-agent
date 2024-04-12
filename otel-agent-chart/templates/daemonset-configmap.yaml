@@ -471,6 +471,8 @@ data:
             value: 'true'
           - key: service.name
             action: delete
+          - key: service_name
+            action: delete
 
       k8sattributes:
         auth_type: "serviceAccount"
