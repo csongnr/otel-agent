@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: otel-gateway
+  name: nr-k8s-otel-collector-gateway
   namespace: {{ .Release.Namespace }}
   labels:
     app: opentelemetry

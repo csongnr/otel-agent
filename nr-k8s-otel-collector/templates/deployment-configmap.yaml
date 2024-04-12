@@ -35,7 +35,7 @@ data:
             value: 'true'
     exporters:
       otlp:
-        endpoint: "otel-gateway:4317"
+        endpoint: "nr-k8s-otel-collector-gateway:4317"
         tls:
           insecure: true
       otlp/newrelic:

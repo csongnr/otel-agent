@@ -22,9 +22,9 @@ spec:
       serviceAccountName: {{ include "nr-k8s-otel-collector.serviceAccountName" . }}
       containers:
         - name: otel-collector
-          image: otel/opentelemetry-collector-contrib:latest # specify image
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           args: ["--config", "/config/deployment-config.yaml"]
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: KUBE_NODE_NAME
               valueFrom:
