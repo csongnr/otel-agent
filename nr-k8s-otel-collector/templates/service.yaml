@@ -4,8 +4,7 @@ metadata:
   name: nr-k8s-otel-collector-gateway
   namespace: {{ .Release.Namespace }}
   labels:
-    app: opentelemetry
-    component: otel-gateway
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:

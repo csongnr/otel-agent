@@ -4,8 +4,7 @@ metadata:
   name: {{ include "nr-k8s-otel-collector.fullname" . }}-deployment
   namespace: {{ .Release.Namespace }}
   labels:
-    app: opentelemetry
-    component: gateway-collector
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 spec:
   replicas: 1
   minReadySeconds: 5

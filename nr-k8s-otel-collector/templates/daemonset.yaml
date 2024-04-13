@@ -4,8 +4,7 @@ metadata:
   name: {{ include "nr-k8s-otel-collector.fullname" . }}-daemonset
   namespace: {{ .Release.Namespace }}
   labels:
-    helm.sh/chart: {{ include "nr-k8s-otel-collector.chart" . }}
-    app.kubernetes.io/name: {{ include "nr-k8s-otel-collector.name" . }}
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 spec: 
   selector:
     matchLabels:

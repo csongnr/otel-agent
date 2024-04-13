@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ include "nr-k8s-otel-collector.fullname" . }}-daemonset-config
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 data:
   otel-collector-config.yaml: |
     receivers:
