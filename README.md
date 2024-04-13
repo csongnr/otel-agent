@@ -5,7 +5,7 @@
 git clone https://github.com/csongnr/otel-agent.git 
 ```
 
-### 2. Update config [here](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/values.yaml#L20-L24) to add a cluster name, and New Relic Ingest - License key
+### 2. Update config [here](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/values.yaml#L20-L24) to add a cluster name, and New Relic Ingest - License key
 Example: 
 ```
 newRelic:
