@@ -17,6 +17,8 @@ spec:
       labels:
         {{- include "nr-k8s-otel-collector.selectorLabels" . | nindent 8 }}
         component: deployment
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/deployment-configmap.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ include "nr-k8s-otel-collector.serviceAccountName" . }}
       containers:

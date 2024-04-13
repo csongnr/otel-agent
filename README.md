@@ -5,20 +5,12 @@
 git clone https://github.com/csongnr/otel-agent.git 
 ```
 
-### 2. Add kube-state-metrics to your cluster: 
- **Note:** This will be added to the chart soon 
-```
-helm repo add prometheus-community \ https://prometheus-community.github.io/helm-charts 
-helm repo update 
-helm install kube-state-metrics prometheus-community/kube-state-metrics
-```
-
-### 3. Update config [here](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/values.yaml#L13-L18) to add a cluster name, and New Relic Ingest - License key
+### 2. Update config [here](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/values.yaml#L20-L24) to add a cluster name, and New Relic Ingest - License key
 Example: 
 ```
 newRelic:
-  apiKey: "INGESTLICENSEKEY3458278592NRALL"
-  endpoint: "https://otlp.nr-data.net:4318"
+  apiKey: "EXAMPLEINGESTLICENSEKEY345878592NRALL"
+  endpoint: "https://otlp.nr-data.net:4317"
   
 cluster:
   name: "SampleApp" 
@@ -31,10 +23,10 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 helm install nodeexporter prometheus-community/prometheus-node-exporter 
 ```
-2. Comment out [these lines](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/templates/configmap.yaml#L277-L292) in the configuration. 
+2. Comment out [these lines](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/templates/daemonset-configmap.yaml#L277-L292) in the configuration. 
 
 
-### 4. From root directory of this repository, run:
+### 3. From root directory of this repository, run:
 ```
 cd ~/otel-agent 
 helm install otel-agent-release nr-k8s-otel-collector
@@ -64,21 +56,11 @@ FROM Log SELECT *
 ```
 
 ## Development notes
-### Iterating on config changes: 
-Because the config is mounted on a configmap, any changes to the [opentelemetry configuration](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/templates/configmap.yaml#L6-L485) at this time require you to either uninstall the release and re-install the release, or upgrade the release and then kill the pod so it spins up w/ the latest changes.
-
-**Note:** This will be updated soon so that you can just upgrade the release to reflect changes. 
- 
-Uninstall the release and re-install the release:
-```
-helm uninstall otel-agent-release 
-helm install otel-agent-release nr-k8s-otel-collector
-```
-**OR:**
-Upgrade the release and then kill the pod:
+### Iterating on otel config: 
+1. Make changes to the [opentelemetry configuration](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/templates/configmap.yaml#L6-L485) 
+2. Upgrade the release:
 ```
 helm upgrade otel-agent-release nr-k8s-otel-collector
-kubectl delete pod <pod-name> 
 ```
 
 
