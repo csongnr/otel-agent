@@ -19,7 +19,8 @@ image:
 
 newRelic:
   apiKey: < NR License Key > 
-  endpoint: "https://otlp.nr-data.net:4317"
+  endpoint: "https://otlp.nr-data.net"
+  namespace: "newrelic"
 cluster:
   name: <cluster name> 
 

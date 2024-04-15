@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: otel-deployment
-  namespace: newrelic
+  namespace: {{ Values.newRelic.namespace }}
   labels:
     app: opentelemetry
     component: gateway-collector

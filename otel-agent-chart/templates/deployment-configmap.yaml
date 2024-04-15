@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: otel-deployment-config
-  namespace: newrelic
+  namespace: {{ Values.newRelic.namespace }}
 data:
   deployment-config.yaml: |
     receivers:
