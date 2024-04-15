@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ include "otel-agent-chart.fullname" . }}
+  namespace: newrelic
   labels:
     app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
     helm.sh/chart: {{ include "otel-agent-chart.chart" . }}
@@ -9,6 +10,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "otel-agent-chart.name" . }}
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:

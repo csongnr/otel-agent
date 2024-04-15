@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: otel-deployment
+  namespace: newrelic
   labels:
     app: opentelemetry
     component: gateway-collector
@@ -12,6 +13,8 @@ spec:
     matchLabels:
       app: opentelemetry
       component: gateway-collector
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
