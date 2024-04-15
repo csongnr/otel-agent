@@ -37,7 +37,7 @@ data:
         endpoint: "otel-gateway:4317"
         tls:
           insecure: true
-      otlp/newrelic:
+      otlphttp/newrelic:
         endpoint: {{ .Values.newRelic.endpoint }}
         headers:
           api-key: {{ .Values.newRelic.apiKey }}
@@ -54,15 +54,15 @@ data:
         # traces:
         #   receivers: [otlp]
         #   processors: [batch]
-        #   exporters: [otlp/newrelic, debug]
+        #   exporters: [otlphttp/newrelic, debug]
         metrics:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp/newrelic, debug]
+          exporters: [otlphttp/newrelic, debug]
         logs:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp/newrelic, debug]
+          exporters: [otlphttp/newrelic, debug]
         logs/events:
           receivers: [k8s_events]
           processors: [resource, batch]

@@ -495,10 +495,10 @@ data:
       batch:
 
     exporters:
-      otlp:
-        endpoint: "otel-gateway:4317"
-        tls:
-          insecure: true
+      otlphttp:
+        endpoint: {{ .Values.newRelic.endpoint }}
+        headers:
+          api-key: {{ .Values.newRelic.apiKey }}
       logging:
         verbosity: detailed
 
@@ -527,8 +527,8 @@ data:
             - resource
             - k8sattributes
             - batch
-          exporters: [otlp, logging]
+          exporters: [otlphttp, logging]
         logs:
           receivers: [otlp, filelog]
           processors: [transform/truncate, resource, k8sattributes, batch]
-          exporters: [logging, otlp]
+          exporters: [logging, otlphttp]
