@@ -29,7 +29,7 @@ helm install nodeexporter prometheus-community/prometheus-node-exporter
 ### 3. From root directory of this repository, run:
 ```
 cd ~/otel-agent 
-helm install otel-agent-release nr-k8s-otel-collector
+helm install otel-agent-release nr-k8s-otel-collector -n newrelic --create-namespace
 ```
 
 ## Confirm installation
