@@ -381,32 +381,6 @@ data:
           datapoint:
             - 'IsMatch(metric.name, "^system.network.*") == true and attributes["device"] == "lo"'
 
-      experimental_metricsgeneration:
-        rules:
-          - name: container_fs_usage_percentage
-            type: calculate
-            metric1: container_fs_usage_bytes
-            metric2: container_fs_limit_bytes
-            operation: divide
-          - name: kube_deployment_pods_missing
-            type: calculate
-            metric1: kube_deployment_spec_replicas
-            metric2: kube_deployment_status_replicas
-            operation: subtract
-          - name: kube_statefulset_pods_missing
-            type: calculate
-            metric1: kube_statefulset_replicas
-            metric2: kube_statefulset_status_replicas
-            operation: subtract
-          - name: kube_daemonset_pods_missing
-            type: calculate
-            metric1: kube_daemonset_status_desired_number_scheduled
-            metric2: kube_daemonset_status_current_number_scheduled
-            operation: subtract
-
-      ##filter out kube_pod_container_status_* when metric = 0
-      ## kube_pod_container_status_[waiting|running|terminated|ready]
-      ## create kube_pod_container_status: with attribute waiting, running, terminated, ready, and a 1 or 0 based on current status 
       metricstransform/kube_pod_status_phase:
         transforms:
           - include: 'kube_pod_container_status_waiting'
@@ -439,13 +413,6 @@ data:
           datapoint:
             - metric.name == "kube_pod_container_status" and value_double == 0.0
 
-      # transform:
-      #   error_mode: ignore
-      #   metric_statements: 
-      #   - context: datapoint 
-      #     statements: 
-      #       - 
-
       attributes/exclude_system_paging:
         include:
           match_type: strict
@@ -464,9 +431,6 @@ data:
           - key: k8s.cluster.name
             action: upsert
             value: {{ .Values.cluster.name }}
-          # - key: k8s.deployment.name
-          #   action: upsert
-          #   value: 
           - key: newrelicOnly
             action: upsert
             value: 'true'
@@ -512,7 +476,6 @@ data:
           receivers: [otlp, k8s_cluster, hostmetrics, kubeletstats, prometheus]
           processors:
             - metricstransform
-            # - experimental_metricsgeneration
             - metricstransform/kube_pod_status_phase
             - filter/exclude_zero_value_kube_pod_container_status
             - filter/exclude_cpu_utilization
