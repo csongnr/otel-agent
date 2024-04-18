@@ -1,7 +1,10 @@
 apiVersion: v1 
 kind: ConfigMap
 metadata:
-  name: otel-config
+  name: {{ include "nr-k8s-otel-collector.fullname" . }}-daemonset-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 data:
   otel-collector-config.yaml: |
     receivers:
@@ -305,8 +308,8 @@ data:
           - /var/log/yum.log
           - /var/log/alternatives.log
         exclude:
-          # Exclude logs from all containers named otel-agent-chart and otelcontribcol
-          - /var/log/pods/*/otel-agent-chart/*.log
+          # Exclude logs from all containers named nr-k8s-otel-collector and otelcontribcol
+          - /var/log/pods/*/nr-k8s-otel-collector/*.log
           - /var/log/pods/*/otelcontribcol/*.log
           - /var/log/pods/*/konnectivity-agent/*.log
           # - /var/log/pods/*/containers/*-exec.log
@@ -449,7 +452,7 @@ data:
 
     exporters:
       otlp:
-        endpoint: "otel-gateway:4317"
+        endpoint: "nr-k8s-otel-collector-gateway:4317"
         tls:
           insecure: true
       logging:

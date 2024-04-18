@@ -1,4 +1,4 @@
-# Default values for otel-agent-chart.
+# Default values for nr-k8s-otel-collector.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -18,10 +18,10 @@ image:
   tag: "0.91.0"
 
 newRelic:
-  apiKey: < NR License Key > 
+  apiKey: <NRLicenseKey>
   endpoint: "https://otlp.nr-data.net:4317"
 cluster:
-  name: <cluster name> 
+  name: <ClusterName>
 
 imagePullSecrets: []
 nameOverride: ""

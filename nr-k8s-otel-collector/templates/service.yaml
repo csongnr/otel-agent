@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: otel-gateway
+  name: nr-k8s-otel-collector-gateway
+  namespace: {{ .Release.Namespace }}
   labels:
-    app: opentelemetry
-    component: otel-gateway
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -17,5 +17,6 @@ spec:
       protocol: TCP
       targetPort: 4318
   selector:
-    component: gateway-collector
+    {{- include "nr-k8s-otel-collector.selectorLabels" . | nindent 4 }}
+    component: deployment
   internalTrafficPolicy: Cluster
