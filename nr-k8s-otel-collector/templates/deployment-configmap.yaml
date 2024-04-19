@@ -1,7 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: otel-deployment-config
+  name: {{ include "nr-k8s-otel-collector.fullname" . }}-deployment-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 data:
   deployment-config.yaml: |
     receivers:
@@ -34,7 +37,7 @@ data:
             value: 'true'
     exporters:
       otlp:
-        endpoint: "otel-gateway:4317"
+        endpoint: "nr-k8s-otel-collector-gateway:4317"
         tls:
           insecure: true
       otlphttp/newrelic:

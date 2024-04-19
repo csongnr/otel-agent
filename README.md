@@ -5,7 +5,7 @@
 git clone https://github.com/csongnr/otel-agent.git 
 ```
 
-### 2. Update config [here](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/values.yaml#L20-L24) to add a cluster name, and New Relic Ingest - License key
+### 2. Update config [here](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/values.yaml#L20-L24) to add a cluster name, and New Relic Ingest - License key
 Example: 
 ```
 newRelic:
@@ -23,13 +23,13 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 helm install nodeexporter prometheus-community/prometheus-node-exporter 
 ```
-2. Comment out [these lines](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/templates/daemonset-configmap.yaml#L277-L292) in the configuration. 
+2. Comment out [these lines](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/templates/daemonset-configmap.yaml#L277-L292) in the configuration. 
 
 
 ### 3. From root directory of this repository, run:
 ```
 cd ~/otel-agent 
-helm install otel-agent-release otel-agent-chart
+helm install otel-agent-release nr-k8s-otel-collector -n newrelic --create-namespace
 ```
 
 ## Confirm installation
@@ -57,10 +57,10 @@ FROM Log SELECT *
 
 ## Development notes
 ### Iterating on otel config: 
-1. Make changes to the [opentelemetry configuration](https://github.com/csongnr/otel-agent/blob/master/otel-agent-chart/templates/configmap.yaml#L6-L485) 
+1. Make changes to the [opentelemetry configuration](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/templates/configmap.yaml#L6-L485) 
 2. Upgrade the release:
 ```
-helm upgrade otel-agent-release otel-agent-chart
+helm upgrade otel-agent-release nr-k8s-otel-collector
 ```
 
 

@@ -1,7 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: otel-cluster-role
+  name: {{ include "nr-k8s-otel-collector.fullname" . }}
+  labels:
+    {{- include "nr-k8s-otel-collector.labels" . | nindent 4 }}
 rules: 
   - apiGroups:
     - ""
