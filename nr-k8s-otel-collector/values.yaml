@@ -23,7 +23,6 @@ newRelic:
 cluster:
   name: <ClusterName>
 
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
