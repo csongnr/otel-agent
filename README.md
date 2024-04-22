@@ -9,7 +9,7 @@ git clone https://github.com/csongnr/otel-agent.git
 Example: 
 ```
 licenseKey: "EXAMPLEINGESTLICENSEKEY345878592NRALL"
-newRelicEndpoint: "https://otlp.nr-data.net:4317"
+newRelicEndpoint: "https://otlp.nr-data.net"
 cluster: "SampleApp" 
 ```
 
