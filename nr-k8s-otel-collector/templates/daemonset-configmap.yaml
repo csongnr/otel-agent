@@ -317,7 +317,7 @@ data:
       batch:
 
     exporters:
-      otlphttp:
+      otlphttp/newrelic:
         endpoint: {{ .Values.newRelic.endpoint }}
         headers:
           api-key: {{ .Values.newRelic.apiKey }}
@@ -353,8 +353,8 @@ data:
             - resource
             - k8sattributes
             - batch
-          exporters: [otlphttp, logging]
+          exporters: [otlphttp/newrelic, logging]
         logs:
           receivers: [otlp, filelog]
           processors: [transform/truncate, resource, k8sattributes, batch]
-          exporters: [logging, otlphttp]
+          exporters: [logging, otlphttp/newrelic]
