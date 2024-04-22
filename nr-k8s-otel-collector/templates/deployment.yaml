@@ -37,6 +37,16 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: status.podIP
+            {{ if .Values.customSecretName }}
+            - name: NR_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.customSecretName }}
+                  key: {{ .Values.customSecretLicenseKey }}
+            {{ else }}
+            - name: NR_LICENSE_KEY
+              value: {{ .Values.licenseKey }}
+            {{ end }}
           ports:
             - containerPort: 4317   # otlp grpc
             - containerPort: 4318   # otlp http

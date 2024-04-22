@@ -8,12 +8,9 @@ git clone https://github.com/csongnr/otel-agent.git
 ### 2. Update config [here](https://github.com/csongnr/otel-agent/blob/master/nr-k8s-otel-collector/values.yaml#L20-L24) to add a cluster name, and New Relic Ingest - License key
 Example: 
 ```
-newRelic:
-  apiKey: "EXAMPLEINGESTLICENSEKEY345878592NRALL"
-  endpoint: "https://otlp.nr-data.net:4317"
-  
-cluster:
-  name: "SampleApp" 
+licenseKey: "EXAMPLEINGESTLICENSEKEY345878592NRALL"
+newRelicEndpoint: "https://otlp.nr-data.net:4317"
+cluster: "SampleApp" 
 ```
 
 #### [Optional] Enable node-exporter (not required for New Relic Kubernetes monitoring experience) 

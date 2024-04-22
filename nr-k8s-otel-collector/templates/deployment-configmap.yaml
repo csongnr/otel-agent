@@ -176,7 +176,7 @@ data:
             value: "kubernetes"
           - key: k8s.cluster.name
             action: upsert
-            value: {{ .Values.cluster.name }}
+            value: {{ .Values.cluster }}
           - key: newrelicOnly
             action: upsert
             value: 'true'
@@ -186,9 +186,9 @@ data:
         tls:
           insecure: true
       otlphttp/newrelic:
-        endpoint: {{ .Values.newRelic.endpoint }}
+        endpoint: {{ .Values.newRelicEndpoint }}
         headers:
-          api-key: {{ .Values.newRelic.apiKey }}
+          api-key: ${env:NR_LICENSE_KEY}
       debug:
         verbosity: detailed
         sampling_initial: 5
