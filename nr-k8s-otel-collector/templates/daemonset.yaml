@@ -56,6 +56,16 @@ spec:
                   fieldPath: spec.nodeName
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: service.instance.id=$(POD_NAME),k8s.pod.uid=$(POD_UID)
+            {{ if .Values.customSecretName }}
+            - name: NR_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.customSecretName }}
+                  key: {{ .Values.customSecretLicenseKey }}
+            {{ else }}
+            - name: NR_LICENSE_KEY
+              value: {{ .Values.licenseKey }}
+            {{ end }}
           volumeMounts:
             - name: config-volume
               mountPath: /conf
