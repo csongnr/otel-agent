@@ -17,11 +17,16 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "0.91.0"
 
-newRelic:
-  apiKey: <NRLicenseKey>
-  endpoint: "https://otlp.nr-data.net"
-cluster:
-  name: <ClusterName>
+# -- This is the New Relic endpoint to send data to.
+newRelicEndpoint: "https://otlp.nr-data.net"
+# -- Name of the Kubernetes cluster monitored. Mandatory. Can be configured also with `global.cluster`
+cluster: ""
+# -- This set this license key to use. Can be configured also with `global.licenseKey`
+licenseKey: ""
+# -- In case you don't want to have the license key in you values, this allows you to point to a user created secret to get the key from there. Can be configured also with `global.customSecretName`
+customSecretName: ""
+# -- In case you don't want to have the license key in you values, this allows you to point to which secret key is the license key located. Can be configured also with `global.customSecretLicenseKey`
+customSecretLicenseKey: ""
 
 imagePullSecrets: []
 nameOverride: ""

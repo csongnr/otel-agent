@@ -287,7 +287,7 @@ data:
           # UPSERT ONLY IF CLUSTER NAME NOT FOUND???
           - key: k8s.cluster.name
             action: upsert
-            value: {{ .Values.cluster.name }}
+            value: {{ .Values.cluster }}
           - key: newrelicOnly
             action: upsert
             value: 'true'
@@ -318,9 +318,9 @@ data:
 
     exporters:
       otlphttp/newrelic:
-        endpoint: {{ .Values.newRelic.endpoint }}
+        endpoint: {{ .Values.newRelicEndpoint }}
         headers:
-          api-key: {{ .Values.newRelic.apiKey }}
+          api-key: ${env:NR_LICENSE_KEY}
       # uncomment when writing daemonset metrics through deployment
       # otlp:
       #   endpoint: "nr-k8s-otel-collector-gateway:4317"
