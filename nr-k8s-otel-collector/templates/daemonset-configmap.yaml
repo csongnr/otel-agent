@@ -100,37 +100,6 @@ data:
                 ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
                 insecure_skip_verify: false
                 server_name: kubernetes
-            - job_name: kube-state-metrics
-              kubernetes_sd_configs:
-                - role: pod
-              relabel_configs:
-                - action: keep
-                  regex: kube-state-metrics
-                  source_labels:
-                    - __meta_kubernetes_pod_label_app_kubernetes_io_name
-            - job_name: apiserver
-              kubernetes_sd_configs:
-                - role: endpoints
-                  namespaces:
-                    names:
-                      - default
-              scheme: https
-              tls_config:
-                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-                insecure_skip_verify: true
-              bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-              relabel_configs:
-                - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
-                  action: keep
-                  regex: kubernetes;https
-                - action: replace
-                  source_labels:
-                  - __meta_kubernetes_namespace
-                  target_label: Namespace
-                - action: replace
-                  source_labels:
-                  - __meta_kubernetes_service_name
-                  target_label: Service
             # node_exporter job not needed, but leaving configuration in incase users want to enable it
             # - job_name: node_exporter
             #   kubernetes_sd_configs:
@@ -180,13 +149,7 @@ data:
               - truncate_all(attributes, 4095)
               - truncate_all(resource.attributes, 4095)
 
-      metricstransform:
-        transforms:
-          - include: k8s.node.condition_ready 
-            action: update
-            new_name: k8s.cluster.info 
-
-      # remove system.cpu metrics for states
+      # following system.% metrics reduce metrics reported by hostmetrics receiver
       filter/exclude_cpu_utilization:
         metrics:
           datapoint:
@@ -238,38 +201,6 @@ data:
           datapoint:
             - 'IsMatch(metric.name, "^system.network.*") == true and attributes["device"] == "lo"'
 
-      metricstransform/kube_pod_status_phase:
-        transforms:
-          - include: 'kube_pod_container_status_waiting'
-            match_type: strict 
-            action: update
-            new_name: 'kube_pod_container_status_phase'
-            operations:
-            - action: add_label
-              new_label: container_phase
-              new_value: waiting 
-          - include: 'kube_pod_container_status_running'
-            match_type: strict
-            action: update
-            new_name: 'kube_pod_container_status_phase'
-            operations:
-            - action: add_label
-              new_label: container_phase
-              new_value: running 
-          - include: 'kube_pod_container_status_terminated'
-            match_type: strict
-            action: update
-            new_name: 'kube_pod_container_status_phase'
-            operations:
-            - action: add_label
-              new_label: container_phase
-              new_value: terminated 
-
-      filter/exclude_zero_value_kube_pod_container_status:
-        metrics:
-          datapoint:
-            - metric.name == "kube_pod_container_status" and value_double == 0.0
-
       attributes/exclude_system_paging:
         include:
           match_type: strict
@@ -284,7 +215,7 @@ data:
           - key: host.id
             from_attribute: host.name
             action: upsert
-          # UPSERT ONLY IF CLUSTER NAME NOT FOUND???
+          # TODO chris: Upsert only when cluster name not found (resource detection override: true)
           - key: k8s.cluster.name
             action: upsert
             value: {{ .Values.cluster.name }}
@@ -337,9 +268,7 @@ data:
         metrics:
           receivers: [otlp, hostmetrics, kubeletstats, prometheus]
           processors:
-            - metricstransform
-            - metricstransform/kube_pod_status_phase
-            - filter/exclude_zero_value_kube_pod_container_status
+            # - transform/truncate
             - filter/exclude_cpu_utilization
             - filter/exclude_memory_utilization
             - filter/exclude_memory_usage
